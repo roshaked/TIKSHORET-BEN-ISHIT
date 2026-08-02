@@ -49,7 +49,8 @@ vm.runInContext(js, sandbox);
 vm.runInContext(enhanced, sandbox);
 
 const { topics, terms, questions, materials } = sandbox.window.__practiceSiteData;
-assert(topics.length === 9, `Expected 9 topics, got ${topics.length}`);
+assert(topics.length === 5, `Expected 5 topics, got ${topics.length}`);
+assert(topics.map((topic) => topic.title).join("|").includes("עבודת צוות") && topics.map((topic) => topic.title).join("|").includes("שכנוע"), "Main topics do not match the requested course structure");
 assert(terms.length >= 70, `Expected at least 70 terms, got ${terms.length}`);
 assert(questions.length === 112, `Expected 112 questions, got ${questions.length}`);
 const questionsByTopic = questions.reduce((counts, question) => {

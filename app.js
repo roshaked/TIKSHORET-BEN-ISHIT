@@ -73,6 +73,62 @@ const topics = [
   },
 ];
 
+const topicAliases = {
+  effective: "effective",
+  feedback: "teamwork",
+  empathy: "empathy",
+  conflict: "conflict",
+  culture: "influence",
+  public: "influence",
+  persuasion: "influence",
+  impression: "influence",
+  interviews: "influence",
+};
+
+topics.splice(0, topics.length,
+  {
+    id: "effective",
+    title: "תקשורת אפקטיבית",
+    lesson: "יחידה 1",
+    priority: "מודלים, רעש, ערוצים",
+    focus: ["מודלים של תקשורת", "רעש תקשורתי", "ערוצים ומשוב"],
+    source: "מודלים, רעש, ערוצים ומשוב בתקשורת בין-אישית.",
+  },
+  {
+    id: "empathy",
+    title: "אמפתיה",
+    lesson: "יחידה 2",
+    priority: "הקשבה, שיקוף, תיקוף",
+    focus: ["הקשבה פעילה", "שיקוף", "תיקוף רגשי וצרכים"],
+    source: "אמפתיה, שיחה אמפתית ותקשורת מקרבת.",
+  },
+  {
+    id: "conflict",
+    title: "קונפליקטים ושיחות קשות",
+    lesson: "יחידה 3",
+    priority: "סגנונות, שלוש השיחות",
+    focus: ["סגנונות קונפליקט", "שלוש השיחות", "הסלמה, אינטרסים ותקשורת מקרבת"],
+    source: "קונפליקט, שיחות קשות ושיחת למידה.",
+  },
+  {
+    id: "teamwork",
+    title: "עבודת צוות",
+    lesson: "יחידה 4",
+    priority: "שלבים, תפקידים, משוב",
+    focus: ["שלבי התפתחות צוות", "תפקידי תקשורת בצוות", "משוב, סינרגיה וקבלת החלטות"],
+    source: "עבודת צוות, מודל טאקמן, תפקידים ומשוב.",
+  },
+  {
+    id: "influence",
+    title: "שכנוע, רושם ושפת גוף",
+    lesson: "יחידה 5",
+    priority: "נתיבים, עקרונות, לא-מילולי",
+    focus: ["נתיבי שכנוע ועקרונות השפעה", "רושם וניהול רושם", "שפת גוף ותקשורת לא-מילולית"],
+    source: "שכנוע, התרשמות וניהול רושם, שפת גוף וראיונות.",
+  },
+);
+window.__topicAliases = topicAliases;
+
 const terms = [
   ["מסר", "Message", "התוכן שהמוען מעביר, כולל מילים, טון, שפת גוף והקשר.", "effective"],
   ["ערוץ תקשורת", "Channel", "האמצעי שבו המסר עובר: פנים אל פנים, טלפון, מייל, מצגת או שיחה מקוונת.", "effective"],
@@ -121,6 +177,10 @@ const terms = [
   tag,
   reference: "חומר מקור לא צורף לתיקייה המקומית",
 }));
+
+terms.forEach((term) => {
+  term.tag = topicAliases[term.tag] || term.tag;
+});
 
 const rawQuestions = [
   ["effective", "חבר צוות מסביר משימה ארוכה, ובסוף מתברר שכל אחד הבין אחרת. מה הפעולה האפקטיבית ביותר בזמן אמת?", ["לבקש מכל משתתף לסכם את הצעד הבא במילים שלו", "להניח שההסבר היה ברור כי כולם הנהנו", "לשלוח הודעה קצרה בלי לוודא קבלה", "להמשיך לפגישה הבאה כדי לא לעכב"], 0, "סיכום במילים של הנמען יוצר משוב ומזהה פערי הבנה לפני שהם הופכים לטעות."],
@@ -215,7 +275,13 @@ function rotateQuestionAnswers(question, index) {
   };
 }
 
-const questions = rawQuestions.map(rotateQuestionAnswers);
+const questions = rawQuestions.map((question, index) => rotateQuestionAnswers([
+  topicAliases[question[0]] || question[0],
+  question[1],
+  question[2],
+  question[3],
+  question[4],
+], index));
 
 function matchesSearch(value) {
   if (!searchText) return true;
@@ -272,6 +338,9 @@ const topicSourceLinks = {
   interviews: "materials/summaries/תקשורת בין אישית נוטבוק.docx",
 };
 
+topicSourceLinks.teamwork = topicSourceLinks.feedback;
+topicSourceLinks.influence = topicSourceLinks.persuasion;
+
 const topicSourcePreview = {
   effective: { text: "materials/extracted/summaries__תקשורת אפקטיבית  - סיכום.txt", type: "text" },
   feedback: { text: "materials/extracted/summaries__עבודת צוות סיכום.txt", type: "text" },
@@ -283,6 +352,9 @@ const topicSourcePreview = {
   impression: { text: "materials/extracted/presentations__התרשמות וניהול רושם.txt", type: "pdf" },
   interviews: { text: "materials/extracted/summaries__תקשורת בין אישית נוטבוק.txt", type: "text" },
 };
+
+topicSourcePreview.teamwork = topicSourcePreview.feedback;
+topicSourcePreview.influence = topicSourcePreview.persuasion;
 
 function renderTopics() {
   const filtered = topics.filter((topic) => matchesSearch(`${topic.title} ${topic.lesson} ${topic.focus.join(" ")}`));

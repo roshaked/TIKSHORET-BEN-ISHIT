@@ -58,7 +58,7 @@ async function checkViewport(page, name, width, height) {
   await page.locator("#sourceViewerClose").evaluate((button) => button.click());
   await page.locator('.nav-item[data-view="units"]').evaluate((button) => button.click());
   const topicLinks = await page.locator("#topicList .source-btn").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  if (topicLinks.length !== 9 || topicLinks.some((href) => !href || !href.startsWith("materials/"))) {
+  if (topicLinks.length !== 5 || topicLinks.some((href) => !href || !href.startsWith("materials/"))) {
     throw new Error(`${name} topic cards do not have original source links`);
   }
   await page.locator("#topicList .source-btn").first().evaluate((link) => link.click());

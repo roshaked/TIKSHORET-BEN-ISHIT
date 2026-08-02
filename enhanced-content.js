@@ -28,6 +28,12 @@ const topicSources = {
   interviews: "נוטבוק וסיכום שכנוע/שפת גוף: רושם, שפת גוף וראיון עבודה",
 };
 
+topicSources.teamwork = topicSources.feedback;
+topicSources.influence = topicSources.persuasion;
+topics.forEach((topic) => {
+  topic.source = topicSources[topic.id] || topic.source;
+});
+
 const topicSourceHref = {
   effective: "materials/summaries/תקשורת אפקטיבית  - סיכום.docx",
   feedback: "materials/summaries/עבודת צוות סיכום.docx",
@@ -84,12 +90,13 @@ const enhancedTerms = [
 ];
 
 enhancedTerms.forEach(([name, english, text, tag, sourceKey]) => {
+  const normalizedTag = topicAliases[tag] || tag;
   terms.push({
     name,
     english,
     text,
-    tag,
-    reference: topicSources[tag],
+    tag: normalizedTag,
+    reference: topicSources[tag] || topicSources[normalizedTag],
     sourceHref: materialIndex[sourceKey],
   });
 });
@@ -115,10 +122,11 @@ const sourceQuestionSeeds = [
 
 sourceQuestionSeeds.forEach((seed, index) => {
   const [topic, prompt, options, answer, why] = seed;
+  const normalizedTopic = topicAliases[topic] || topic;
   const offset = index % options.length;
   questions.push({
     id: `m${index + 1}`,
-    topic,
+    topic: normalizedTopic,
     prompt,
     options: options.map((_, optionIndex) => options[(optionIndex - offset + options.length) % options.length]),
     answer: (answer + offset) % options.length,
@@ -199,10 +207,11 @@ const additionalQuestionSeeds = [
 
 additionalQuestionSeeds.forEach((seed, index) => {
   const [topic, prompt, options, answer, why] = seed;
+  const normalizedTopic = topicAliases[topic] || topic;
   const offset = index % options.length;
   questions.push({
     id: `a${index + 1}`,
-    topic,
+    topic: normalizedTopic,
     prompt,
     options: options.map((_, optionIndex) => options[(optionIndex - offset + options.length) % options.length]),
     answer: (answer + offset) % options.length,
