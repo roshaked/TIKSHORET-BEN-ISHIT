@@ -241,7 +241,7 @@ renderTerms = function renderEnhancedTerms() {
       <p>${term.text}</p>
       <p class="source-note">${term.reference}</p>
       <div class="source-actions">
-        <a class="source-btn" href="${term.sourceHref || topicSourceHref[term.tag] || "index.html"}">פתיחת מקור רלוונטי</a>
+        <a class="source-btn" data-topic-source="${term.tag}" href="${term.sourceHref || topicSourceHref[term.tag] || "index.html"}">פתיחת מקור רלוונטי</a>
       </div>
     </article>
   `).join("") || `<div class="empty-state">לא נמצאו כרטיסיות לפי הסינון הנוכחי.</div>`;

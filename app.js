@@ -566,11 +566,11 @@ async function openSourceViewer(topicId) {
 }
 
 document.addEventListener("click", (event) => {
-  const sourceLink = event.target.closest?.(".topic-card .source-btn");
+  const sourceLink = event.target.closest?.(".topic-card .source-btn, .term-card .source-btn");
   if (!sourceLink) return;
   event.preventDefault();
-  const topicId = sourceLink.closest(".topic-card")?.querySelector(".badge")?.textContent;
-  const topic = topics.find((item) => item.lesson === topicId) || topics.find((item) => topicSourceLinks[item.id] === sourceLink.getAttribute("href"));
+  const topicId = sourceLink.dataset.topicSource || sourceLink.closest(".topic-card")?.querySelector(".badge")?.textContent;
+  const topic = topicMap[topicId] || topics.find((item) => item.lesson === topicId) || topics.find((item) => topicSourceLinks[item.id] === sourceLink.getAttribute("href"));
   if (topic) {
     setActiveTopic(topic.id);
     openSourceViewer(topic.id);

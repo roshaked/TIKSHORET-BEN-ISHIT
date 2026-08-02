@@ -68,6 +68,8 @@ assert(Math.max(...distribution) - Math.min(...distribution) <= 1, `Answer distr
 assert(html.includes("enhanced-content.js"), "Enhanced course material script is not loaded");
 assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
 assert(js.includes("const topicSourceLinks") && js.includes("target=\"_blank\"") && js.includes("topicSourceLinks[topic.id]"), "Topic cards must open original source files");
+assert(js.includes(".topic-card .source-btn, .term-card .source-btn") && enhanced.includes("data-topic-source=\"${term.tag}\""), "All source buttons must use the in-app source viewer");
+assert(html.includes("הורדת הקובץ המקורי"), "Original file link must be clearly labeled as download");
 assert(!html.includes("Lorem ipsum") && !js.includes("TODO starter"), "Starter placeholder content found");
 
 console.log("Practice site checks passed");

@@ -51,6 +51,11 @@ async function checkViewport(page, name, width, height) {
   if (sourceState.disabled || sourceState.missingHref) {
     throw new Error(`${name} has disabled or missing topic source links`);
   }
+  await page.locator("#termStack .source-btn").first().evaluate((link) => link.click());
+  if (!(await page.locator("#sourceViewer").evaluate((dialog) => dialog.open))) {
+    throw new Error(`${name} term source did not open the in-app viewer`);
+  }
+  await page.locator("#sourceViewerClose").evaluate((button) => button.click());
   await page.locator('.nav-item[data-view="units"]').evaluate((button) => button.click());
   const topicLinks = await page.locator("#topicList .source-btn").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   if (topicLinks.length !== 9 || topicLinks.some((href) => !href || !href.startsWith("materials/"))) {
