@@ -463,7 +463,7 @@ function renderCoverage() {
       <h3>${material.title}</h3>
       <p>${material.note}</p>
       <div class="source-actions">
-        ${material.href ? `<a class="source-btn" href="${material.href}">פתיחת מקור</a>` : `<a class="source-btn" aria-disabled="true">אין קובץ לפתיחה</a>`}
+        ${material.href?.endsWith(".m4a") ? `<audio class="audio-source-player" controls preload="metadata" src="${material.href}"></audio><a class="source-btn" href="${material.href}">פתיחת קובץ הקול</a>` : material.href ? `<a class="source-btn" href="${material.href}">פתיחת מקור</a>` : `<a class="source-btn" aria-disabled="true">אין קובץ לפתיחה</a>`}
       </div>
     </article>
   `).join("");

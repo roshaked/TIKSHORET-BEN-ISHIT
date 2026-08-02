@@ -17,6 +17,16 @@ const materialIndex = {
   examPrepDeck: "materials/presentations/שיעור הכנה למבחן.pptx",
 };
 
+const audioSources = Array.from({ length: 18 }, (_, index) => {
+  const number = index + 1;
+  return {
+    title: `בין אישית ${number}`,
+    status: "הקלטת שיעור",
+    note: "סיכום קולי של חומר הקורס. ניתן להאזין לצד הקריאה והתרגול.",
+    href: `materials/audio/בין אישית ${number}.m4a`,
+  };
+});
+
 const topicSources = {
   effective: "סיכומים מהמודל, תקשורת אפקטיבית - סיכום, תקשורת אפקטיבית 1-3",
   feedback: "עבודת צוות סיכום: משוב, מוטיבציה וקבלת החלטות בצוות",
@@ -274,6 +284,7 @@ materials.splice(0, materials.length, ...[
   ["תקשורת אפקטיבית 2", "מצגת", "חלק שני ביחידת תקשורת אפקטיבית.", materialIndex.effectiveDeck2],
   ["תקשורת אפקטיבית 3", "מצגת", "חלק שלישי ביחידת תקשורת אפקטיבית.", materialIndex.effectiveDeck3],
   ["שיעור הכנה למבחן", "מצגת הכנה", "מבנה הבחינה, חמשת נושאי הקורס, שאלות דוגמה וטיפים לפתרון שאלות תרחיש.", materialIndex.examPrepDeck],
+  ...audioSources.map(({ title, status, note, href }) => [title, status, note, href]),
 ].map(([title, status, note, href]) => ({ title, status, note, href })));
 
 renderTerms = function renderEnhancedTerms() {

@@ -541,6 +541,13 @@ p {
   margin-bottom: 14px;
 }
 
+.audio-source-player {
+  width: 100%;
+  min-width: 240px;
+  height: 38px;
+  accent-color: var(--accent);
+}
+
 .slide-nav,
 .lesson-actions,
 .source-actions,

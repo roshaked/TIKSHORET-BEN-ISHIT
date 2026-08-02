@@ -59,7 +59,8 @@ const questionsByTopic = questions.reduce((counts, question) => {
   return counts;
 }, {});
 assert(topics.every((topic) => questionsByTopic[topic.id] >= 12), "Every topic needs at least 12 practice questions");
-assert(materials.length === 16, `Expected 16 source files, got ${materials.length}`);
+assert(materials.length === 34, `Expected 34 source files, got ${materials.length}`);
+assert(materials.filter((item) => item.href.endsWith(".m4a")).length === 18, "Audio source collection is incomplete");
 assert(materials.every((item) => item.href && item.href.startsWith("materials/")), "Every material needs a local source link");
 
 const distribution = questions.reduce((counts, question) => {
