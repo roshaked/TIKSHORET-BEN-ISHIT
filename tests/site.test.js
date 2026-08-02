@@ -52,13 +52,14 @@ const { topics, terms, questions, materials } = sandbox.window.__practiceSiteDat
 assert(topics.length === 5, `Expected 5 topics, got ${topics.length}`);
 assert(topics.map((topic) => topic.title).join("|").includes("עבודת צוות") && topics.map((topic) => topic.title).join("|").includes("שכנוע"), "Main topics do not match the requested course structure");
 assert(terms.length >= 70, `Expected at least 70 terms, got ${terms.length}`);
-assert(questions.length === 112, `Expected 112 questions, got ${questions.length}`);
+assert(questions.length === 130, `Expected 130 questions, got ${questions.length}`);
+assert(questions.filter((question) => question.exam).length === 18, "Exam sample question set is incomplete");
 const questionsByTopic = questions.reduce((counts, question) => {
   counts[question.topic] = (counts[question.topic] || 0) + 1;
   return counts;
 }, {});
 assert(topics.every((topic) => questionsByTopic[topic.id] >= 12), "Every topic needs at least 12 practice questions");
-assert(materials.length === 15, `Expected 15 source files, got ${materials.length}`);
+assert(materials.length === 16, `Expected 16 source files, got ${materials.length}`);
 assert(materials.every((item) => item.href && item.href.startsWith("materials/")), "Every material needs a local source link");
 
 const distribution = questions.reduce((counts, question) => {
@@ -68,6 +69,8 @@ const distribution = questions.reduce((counts, question) => {
 assert(Math.max(...distribution) - Math.min(...distribution) <= 1, `Answer distribution is uneven: ${distribution.join(",")}`);
 assert(html.includes("enhanced-content.js"), "Enhanced course material script is not loaded");
 assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
+assert(enhanced.includes("שיעור הכנה למבחן.pptx") && enhanced.includes("examQuestionSeeds"), "Exam preparation material is not wired into the site");
+assert(js.includes("שאלות דוגמה למבחן") && js.includes("openExamPractice"), "Exam practice entry point is missing");
 assert(js.includes("const topicSourceLinks") && js.includes("target=\"_blank\"") && js.includes("topicSourceLinks[topic.id]"), "Topic cards must open original source files");
 assert(js.includes(".topic-card .source-btn, .term-card .source-btn") && enhanced.includes("data-topic-source=\"${term.tag}\""), "All source buttons must use the in-app source viewer");
 assert(html.includes("הורדת הקובץ המקורי"), "Original file link must be clearly labeled as download");

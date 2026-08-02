@@ -262,7 +262,7 @@ let aiMessages = [
 const topicMap = Object.fromEntries(topics.map((topic) => [topic.id, topic]));
 
 function rotateQuestionAnswers(question, index) {
-  const [topic, prompt, options, answer, why] = question;
+  const [topic, prompt, options, answer, why, exam = false] = question;
   const offset = index % options.length;
   const rotatedOptions = options.map((_, optionIndex) => options[(optionIndex - offset + options.length) % options.length]);
   return {
@@ -272,6 +272,7 @@ function rotateQuestionAnswers(question, index) {
     options: rotatedOptions,
     answer: (answer + offset) % options.length,
     why,
+    exam,
   };
 }
 
@@ -281,6 +282,7 @@ const questions = rawQuestions.map((question, index) => rotateQuestionAnswers([
   question[2],
   question[3],
   question[4],
+  question[5],
 ], index));
 
 function matchesSearch(value) {
@@ -390,8 +392,12 @@ function renderTopics() {
   `).join("") || `<div class="empty-state">לא נמצאו יחידות לפי החיפוש הנוכחי.</div>`;
 }
 
-function renderFilters(targetId, active, onClickName) {
-  const chips = [{ id: "all", title: "הכול" }, ...topics.map(({ id, title }) => ({ id, title }))];
+function renderFilters(targetId, active, onClickName, includeExam = false) {
+  const chips = [
+    { id: "all", title: "הכול" },
+    ...(includeExam ? [{ id: "exam", title: "שאלות דוגמה למבחן" }] : []),
+    ...topics.map(({ id, title }) => ({ id, title })),
+  ];
   document.getElementById(targetId).innerHTML = chips.map((chip) => `
     <button class="filter-chip ${active === chip.id ? "active" : ""}" type="button" onclick="${onClickName}('${chip.id}')">${chip.title}</button>
   `).join("");
@@ -420,9 +426,10 @@ function renderTerms() {
 }
 
 function renderQuestions() {
-  renderFilters("questionFilters", activeQuestionFilter, "setQuestionFilter");
+  renderFilters("questionFilters", activeQuestionFilter, "setQuestionFilter", true);
   const filtered = questions.filter((question) => {
-    const inFilter = activeQuestionFilter === "all" || question.topic === activeQuestionFilter;
+    const inFilter = activeQuestionFilter === "all"
+      || (activeQuestionFilter === "exam" ? question.exam : question.topic === activeQuestionFilter);
     return inFilter && matchesSearch(`${question.prompt} ${question.options.join(" ")} ${topicMap[question.topic].title}`);
   });
   document.getElementById("questionList").innerHTML = filtered.map((question) => {
@@ -559,6 +566,13 @@ function setTermFilter(filter) {
 function setQuestionFilter(filter) {
   activeQuestionFilter = filter;
   renderQuestions();
+}
+
+function openExamPractice() {
+  activeQuestionFilter = "exam";
+  activeView = "practice";
+  renderAll();
+  document.getElementById("practice")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function selectAnswer(questionId, answer) {
