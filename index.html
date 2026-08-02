@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>תקשורת בין אישית | אתר תרגול</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell" dir="rtl">
+      <aside class="sidebar" aria-label="ניווט באתר">
+        <div class="brand">
+          <span class="brand-mark">תב</span>
+          <div>
+            <p>תקשורת בין אישית</p>
+            <strong>למידה ותרגול</strong>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="תצוגות למידה">
+          <button class="nav-item active" data-view="dashboard" type="button">סקירה</button>
+          <button class="nav-item" data-view="units" type="button">יחידות לימוד</button>
+          <button class="nav-item" data-view="termsView" type="button">כרטיסיות</button>
+          <button class="nav-item" data-view="practice" type="button">תרגול</button>
+          <button class="nav-item" data-view="coverage" type="button">כיסוי וחוסרים</button>
+        </nav>
+
+        <div class="progress-card" aria-live="polite">
+          <span>דיוק בתרגול</span>
+          <strong id="score">0%</strong>
+          <div class="progress-track"><div id="progressFill"></div></div>
+          <small id="progress">0/0 שאלות נענו</small>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">מרכז למידה לקורס</p>
+            <h1>תרגול איכותי בתקשורת בין אישית</h1>
+          </div>
+          <label class="search-box">
+            <span>חיפוש</span>
+            <input id="searchInput" type="search" placeholder="מושג, נושא, דוגמה או מיומנות..." />
+          </label>
+        </header>
+
+        <section id="dashboard" class="view active-view" aria-labelledby="dashboardTitle">
+          <div class="overview-panel">
+            <div>
+              <p class="eyebrow">מסלול תרגול</p>
+              <h2 id="dashboardTitle">לומדים דרך מושגים, מצבים ושאלות יישומיות</h2>
+              <p>
+                האתר מחלק את הקורס לתשעה נושאים מרכזיים ומתרגם כל נושא להתנהגויות נצפות,
+                סימני אזהרה בשיחה, ניסוחים שימושיים ושאלות תרחיש לתרגול.
+              </p>
+            </div>
+            <div class="exam-card">
+              <strong>איך מומלץ ללמוד</strong>
+              <span>1. לעבור על יחידת לימוד</span>
+              <span>2. לפתוח כרטיסיות מושגים</span>
+              <span>3. לענות על שאלות תרחיש</span>
+              <span>4. לחזור להסברים של טעויות</span>
+            </div>
+          </div>
+          <div id="statsGrid" class="stats-grid"></div>
+          <div>
+            <div class="section-title">
+              <h2>שאלות פתוחות לתרגול</h2>
+              <p>מתאימות לחזרה לפני מבחן, עבודה מסכמת או סימולציה בכיתה.</p>
+            </div>
+            <div id="casePrompts" class="prompt-list"></div>
+          </div>
+        </section>
+
+        <section id="units" class="view" aria-labelledby="unitsTitle">
+          <div class="section-title">
+            <h2 id="unitsTitle">יחידות לימוד לפי נושאים</h2>
+            <p>כל יחידה כוללת מיקוד ללמידה ופעולות שאפשר לתרגל בפועל.</p>
+          </div>
+          <div id="topicList" class="topic-list"></div>
+        </section>
+
+        <section id="termsView" class="view" aria-labelledby="termsTitle">
+          <div class="section-title">
+            <h2 id="termsTitle">כרטיסיות מושגים</h2>
+            <p>השתמשו במסננים כדי להתמקד בנושא מסוים, או בחיפוש כדי למצוא מושג במהירות.</p>
+          </div>
+          <div id="termFilters" class="filter-row"></div>
+          <div id="termStack" class="term-stack"></div>
+        </section>
+
+        <section id="practice" class="view" aria-labelledby="practiceTitle">
+          <div class="section-title">
+            <h2 id="practiceTitle">תרגול שאלות</h2>
+            <p>השאלות בנויות סביב החלטות תקשורתיות, ניסוח תגובה וזיהוי כשלים בשיחה.</p>
+          </div>
+          <div id="questionFilters" class="filter-row"></div>
+          <div class="practice-actions">
+            <button id="resetPractice" class="secondary-action" type="button">איפוס תרגול</button>
+            <button id="revealAll" class="secondary-action" type="button">הצגת כל ההסברים</button>
+          </div>
+          <div id="questionList" class="question-list"></div>
+        </section>
+
+        <section id="coverage" class="view" aria-labelledby="coverageTitle">
+          <div class="section-title">
+            <h2 id="coverageTitle">כיסוי וחוסרים</h2>
+            <p>כאן מרוכזים מקורות, מגבלות וחומר שכדאי להוסיף לריפו בהמשך.</p>
+          </div>
+          <div id="coverageList" class="presentation-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
