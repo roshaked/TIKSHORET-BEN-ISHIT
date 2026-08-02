@@ -611,6 +611,7 @@ p {
 
 .view {
   display: none;
+  scroll-margin-top: 84px;
 }
 
 .active-view {

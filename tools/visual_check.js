@@ -33,6 +33,15 @@ const server = http.createServer((request, response) => {
 async function checkViewport(page, name, width, height) {
   await page.setViewportSize({ width, height });
   await page.goto("http://127.0.0.1:4173", { waitUntil: "networkidle" });
+  for (const view of ["dashboard", "units", "termsView", "practice", "coverage"]) {
+    await page.locator(`.nav-item[data-view="${view}"]`).evaluate((button) => button.click());
+    const active = await page.locator(`#${view}`).evaluate((node) => node.classList.contains("active-view"));
+    if (!active) throw new Error(`${name} nav shortcut did not open ${view}`);
+  }
+  await page.locator(".chapter-button").nth(1).evaluate((button) => button.click());
+  if (!(await page.locator("#units").evaluate((node) => node.classList.contains("active-view")))) {
+    throw new Error(`${name} chapter shortcut did not open units`);
+  }
   await page.screenshot({ path: path.join(root, "tools", `visual-${name}.png`), fullPage: true });
   const metrics = await page.evaluate(() => ({
     bodyOverflow: document.body.scrollWidth > document.body.clientWidth,

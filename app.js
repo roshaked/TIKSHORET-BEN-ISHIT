@@ -222,7 +222,7 @@ function matchesSearch(value) {
   return value.toLowerCase().includes(searchText.toLowerCase());
 }
 
-function renderView() {
+function renderView({ scrollToView = false } = {}) {
   document.querySelectorAll(".view").forEach((view) => {
     view.classList.toggle("active-view", view.id === activeView);
   });
@@ -230,6 +230,9 @@ function renderView() {
     button.classList.toggle("active", button.dataset.view === activeView);
   });
   if (window.lucide) window.lucide.createIcons();
+  if (scrollToView) {
+    document.getElementById(activeView)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
 function renderStats() {
@@ -459,6 +462,7 @@ function setActiveTopic(topicId) {
   activeQuestionFilter = topicId;
   activeView = "units";
   renderAll();
+  document.getElementById("units")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function moveMaterial(direction) {
@@ -469,7 +473,8 @@ function moveMaterial(direction) {
 document.querySelectorAll(".nav-item").forEach((button) => {
   button.addEventListener("click", () => {
     activeView = button.dataset.view;
-    renderView();
+    renderView({ scrollToView: true });
+    document.getElementById("sidebar")?.classList.remove("open");
   });
 });
 
