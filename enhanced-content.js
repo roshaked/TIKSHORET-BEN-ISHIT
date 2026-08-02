@@ -28,6 +28,18 @@ const topicSources = {
   interviews: "נוטבוק וסיכום שכנוע/שפת גוף: רושם, שפת גוף וראיון עבודה",
 };
 
+const topicSourceHref = {
+  effective: "materials/summaries/תקשורת אפקטיבית  - סיכום.docx",
+  feedback: "materials/summaries/עבודת צוות סיכום.docx",
+  empathy: "materials/presentations/אמפתיה.pdf",
+  conflict: "materials/summaries/קונפליקט.docx.pdf",
+  culture: "materials/summaries/תקשורת בין אישית נוטבוק.docx",
+  public: "materials/presentations/שפת גוף.pdf",
+  persuasion: "materials/summaries/סיכום שכנוע , התרשמות וניהול רושם ושפת גוף.pdf",
+  impression: "materials/presentations/התרשמות וניהול רושם.pdf",
+  interviews: "materials/summaries/תקשורת בין אישית נוטבוק.docx",
+};
+
 topics.forEach((topic) => {
   topic.source = topicSources[topic.id];
 });
@@ -222,6 +234,19 @@ renderTerms = function renderEnhancedTerms() {
     const inFilter = activeTermFilter === "all" || term.tag === activeTermFilter;
     return inFilter && matchesSearch(`${term.name} ${term.english} ${term.text} ${topicMap[term.tag].title}`);
   });
+  document.getElementById("termStack").innerHTML = filtered.map((term) => `
+    <article class="term-card">
+      <div class="term-meta"><span class="badge">${topicMap[term.tag].title}</span></div>
+      <h3>${term.name} <span lang="en">(${term.english})</span></h3>
+      <p>${term.text}</p>
+      <p class="source-note">${term.reference}</p>
+      <div class="source-actions">
+        <a class="source-btn" href="${term.sourceHref || topicSourceHref[term.tag] || "index.html"}">פתיחת מקור רלוונטי</a>
+      </div>
+    </article>
+  `).join("") || `<div class="empty-state">לא נמצאו כרטיסיות לפי הסינון הנוכחי.</div>`;
+  return;
+
   document.getElementById("termStack").innerHTML = filtered.map((term) => `
     <article class="term-card">
       <div class="term-meta">

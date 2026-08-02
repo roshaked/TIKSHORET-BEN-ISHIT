@@ -42,6 +42,14 @@ async function checkViewport(page, name, width, height) {
   if (!(await page.locator("#units").evaluate((node) => node.classList.contains("active-view")))) {
     throw new Error(`${name} chapter shortcut did not open units`);
   }
+  await page.locator('.nav-item[data-view="termsView"]').evaluate((button) => button.click());
+  const sourceState = await page.evaluate(() => ({
+    disabled: document.querySelectorAll('#termStack a[aria-disabled="true"]').length,
+    missingHref: [...document.querySelectorAll("#termStack .source-btn")].some((link) => !link.getAttribute("href")),
+  }));
+  if (sourceState.disabled || sourceState.missingHref) {
+    throw new Error(`${name} has disabled or missing topic source links`);
+  }
   await page.screenshot({ path: path.join(root, "tools", `visual-${name}.png`), fullPage: true });
   const metrics = await page.evaluate(() => ({
     bodyOverflow: document.body.scrollWidth > document.body.clientWidth,
