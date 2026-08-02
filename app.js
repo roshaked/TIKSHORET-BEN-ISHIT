@@ -272,6 +272,18 @@ const topicSourceLinks = {
   interviews: "materials/summaries/תקשורת בין אישית נוטבוק.docx",
 };
 
+const topicSourcePreview = {
+  effective: { text: "materials/extracted/summaries__תקשורת אפקטיבית  - סיכום.txt", type: "text" },
+  feedback: { text: "materials/extracted/summaries__עבודת צוות סיכום.txt", type: "text" },
+  empathy: { text: "materials/extracted/presentations__אמפתיה.txt", type: "pdf" },
+  conflict: { text: "materials/extracted/summaries__קונפליקט.docx.txt", type: "text" },
+  culture: { text: "materials/extracted/summaries__תקשורת בין אישית נוטבוק.txt", type: "text" },
+  public: { text: "materials/extracted/presentations__שפת גוף.txt", type: "pdf" },
+  persuasion: { text: "materials/extracted/summaries__סיכום שכנוע , התרשמות וניהול רושם ושפת גוף.txt", type: "text" },
+  impression: { text: "materials/extracted/presentations__התרשמות וניהול רושם.txt", type: "pdf" },
+  interviews: { text: "materials/extracted/summaries__תקשורת בין אישית נוטבוק.txt", type: "text" },
+};
+
 function renderTopics() {
   const filtered = topics.filter((topic) => matchesSearch(`${topic.title} ${topic.lesson} ${topic.focus.join(" ")}`));
   document.getElementById("topicList").innerHTML = filtered.map((topic) => `
@@ -497,6 +509,81 @@ function moveMaterial(direction) {
   activeMaterialIndex = (activeMaterialIndex + direction + materials.length) % materials.length;
   renderStudyLab();
 }
+
+function escapeHtml(value) {
+  return value.replace(/[&<>'"]/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;",
+  }[character]));
+}
+
+function relevantExcerpt(text, topic) {
+  const keywords = [...topic.focus, topic.title].filter(Boolean);
+  const index = keywords.reduce((found, keyword) => {
+    const match = text.indexOf(keyword);
+    return found === -1 ? match : match !== -1 && match < found ? match : found;
+  }, -1);
+  const start = Math.max(0, index === -1 ? 0 : index - 700);
+  return text.slice(start, start + 3200);
+}
+
+async function openSourceViewer(topicId) {
+  const topic = topicMap[topicId] || topics[0];
+  const preview = topicSourcePreview[topic.id];
+  const viewer = document.getElementById("sourceViewer");
+  const body = document.getElementById("sourceViewerBody");
+  const focus = document.getElementById("sourceViewerFocus");
+  const original = document.getElementById("sourceViewerOriginal");
+  const title = document.getElementById("sourceViewerTitle");
+  if (!viewer || !body || !focus || !original || !title) return;
+
+  title.textContent = topic.title;
+  focus.innerHTML = `<strong>החלקים הרלוונטיים בפרק:</strong><ul class="focus-list">${topic.focus.map((item) => `<li>${item}</li>`).join("")}</ul>`;
+  original.href = topicSourceLinks[topic.id] || "index.html";
+  body.innerHTML = preview?.type === "pdf"
+    ? `<iframe title="${topic.title}" src="${original.href}"></iframe><p class="source-loading">טוען תקציר רלוונטי...</p>`
+    : `<p class="source-loading">טוען את החלק הרלוונטי...</p>`;
+  if (typeof viewer.showModal === "function" && !viewer.open) viewer.showModal();
+  if (window.lucide) window.lucide.createIcons();
+
+  if (!preview?.text) return;
+  try {
+    const response = await fetch(preview.text);
+    if (!response.ok) throw new Error("Source preview unavailable");
+    const text = await response.text();
+    const excerpt = `<pre class="source-text-preview">${escapeHtml(relevantExcerpt(text, topic))}</pre>`;
+    if (preview.type === "pdf") {
+      body.insertAdjacentHTML("beforeend", excerpt);
+    } else {
+      body.innerHTML = excerpt;
+    }
+  } catch (error) {
+    body.insertAdjacentHTML("beforeend", `<p class="empty-state">לא ניתן להציג את התצוגה המקדימה כרגע. ניתן לפתוח את הקובץ המקורי מהכפתור שמתחת.</p>`);
+  }
+}
+
+document.addEventListener("click", (event) => {
+  const sourceLink = event.target.closest?.(".topic-card .source-btn");
+  if (!sourceLink) return;
+  event.preventDefault();
+  const topicId = sourceLink.closest(".topic-card")?.querySelector(".badge")?.textContent;
+  const topic = topics.find((item) => item.lesson === topicId) || topics.find((item) => topicSourceLinks[item.id] === sourceLink.getAttribute("href"));
+  if (topic) {
+    setActiveTopic(topic.id);
+    openSourceViewer(topic.id);
+  }
+});
+
+document.getElementById("sourceViewerClose")?.addEventListener("click", () => {
+  document.getElementById("sourceViewer")?.close();
+});
+
+document.getElementById("sourceViewer")?.addEventListener("click", (event) => {
+  if (event.target.id === "sourceViewer") event.currentTarget.close();
+});
 
 document.querySelectorAll(".nav-item").forEach((button) => {
   button.addEventListener("click", () => {

@@ -10,6 +10,7 @@ const mime = {
   ".js": "text/javascript; charset=utf-8",
   ".pdf": "application/pdf",
   ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ".txt": "text/plain; charset=utf-8",
 };
 
 const server = http.createServer((request, response) => {
@@ -55,6 +56,11 @@ async function checkViewport(page, name, width, height) {
   if (topicLinks.length !== 9 || topicLinks.some((href) => !href || !href.startsWith("materials/"))) {
     throw new Error(`${name} topic cards do not have original source links`);
   }
+  await page.locator("#topicList .source-btn").first().evaluate((link) => link.click());
+  if (!(await page.locator("#sourceViewer").evaluate((dialog) => dialog.open))) {
+    throw new Error(`${name} topic source did not open the in-app viewer`);
+  }
+  await page.locator("#sourceViewerClose").evaluate((button) => button.click());
   await page.screenshot({ path: path.join(root, "tools", `visual-${name}.png`), fullPage: true });
   const metrics = await page.evaluate(() => ({
     bodyOverflow: document.body.scrollWidth > document.body.clientWidth,

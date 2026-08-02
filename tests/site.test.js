@@ -33,6 +33,7 @@ assert(css.includes(".answers") && css.includes("grid-template-columns: 1fr"), "
 const sandbox = {
   document: {
     querySelectorAll: () => [],
+    addEventListener: () => {},
     getElementById: () => ({
       innerHTML: "",
       textContent: "",
