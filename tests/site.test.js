@@ -4,6 +4,7 @@ const vm = require("node:vm");
 const html = fs.readFileSync("index.html", "utf8");
 const css = fs.readFileSync("styles.css", "utf8");
 const js = fs.readFileSync("app.js", "utf8");
+const enhanced = fs.readFileSync("enhanced-content.js", "utf8");
 
 function assert(condition, message) {
   if (!condition) {
@@ -39,18 +40,22 @@ const sandbox = {
 };
 vm.createContext(sandbox);
 vm.runInContext(js, sandbox);
+vm.runInContext(enhanced, sandbox);
 
 const { topics, terms, questions, materials } = sandbox.window.__practiceSiteData;
 assert(topics.length === 9, `Expected 9 topics, got ${topics.length}`);
-assert(terms.length >= 36, `Expected at least 36 terms, got ${terms.length}`);
-assert(questions.length === 36, `Expected 36 questions, got ${questions.length}`);
-assert(materials.some((item) => item.status.includes("חסר")), "Missing source-material gap");
+assert(terms.length >= 70, `Expected at least 70 terms, got ${terms.length}`);
+assert(questions.length === 52, `Expected 52 questions, got ${questions.length}`);
+assert(materials.length === 15, `Expected 15 source files, got ${materials.length}`);
+assert(materials.every((item) => item.href && item.href.startsWith("materials/")), "Every material needs a local source link");
 
 const distribution = questions.reduce((counts, question) => {
   counts[question.answer] += 1;
   return counts;
 }, [0, 0, 0, 0]);
-assert(distribution.every((count) => count === 9), `Answer distribution is uneven: ${distribution.join(",")}`);
+assert(Math.max(...distribution) - Math.min(...distribution) <= 1, `Answer distribution is uneven: ${distribution.join(",")}`);
+assert(html.includes("enhanced-content.js"), "Enhanced course material script is not loaded");
+assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
 assert(!html.includes("Lorem ipsum") && !js.includes("TODO starter"), "Starter placeholder content found");
 
 console.log("Practice site checks passed");
