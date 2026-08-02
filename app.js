@@ -260,8 +260,36 @@ function renderPrompts() {
   )).join("");
 }
 
+const topicSourceLinks = {
+  effective: "materials/summaries/תקשורת אפקטיבית  - סיכום.docx",
+  feedback: "materials/summaries/עבודת צוות סיכום.docx",
+  empathy: "materials/presentations/אמפתיה.pdf",
+  conflict: "materials/summaries/קונפליקט.docx.pdf",
+  culture: "materials/summaries/תקשורת בין אישית נוטבוק.docx",
+  public: "materials/presentations/שפת גוף.pdf",
+  persuasion: "materials/summaries/סיכום שכנוע , התרשמות וניהול רושם ושפת גוף.pdf",
+  impression: "materials/presentations/התרשמות וניהול רושם.pdf",
+  interviews: "materials/summaries/תקשורת בין אישית נוטבוק.docx",
+};
+
 function renderTopics() {
   const filtered = topics.filter((topic) => matchesSearch(`${topic.title} ${topic.lesson} ${topic.focus.join(" ")}`));
+  document.getElementById("topicList").innerHTML = filtered.map((topic) => `
+    <article class="topic-card">
+      <div class="topic-meta">
+        <span class="badge">${topic.lesson}</span>
+        <span class="badge warn">${topic.priority}</span>
+      </div>
+      <h3>${topic.title}</h3>
+      <ul class="focus-list">${topic.focus.map((item) => `<li>${item}</li>`).join("")}</ul>
+      <p class="source-note">${topic.source}</p>
+      <div class="source-actions">
+        <a class="source-btn" href="${topicSourceLinks[topic.id] || "index.html"}" target="_blank" rel="noopener" onclick="setActiveTopic('${topic.id}')">פתיחת קובץ המקור</a>
+      </div>
+    </article>
+  `).join("") || `<div class="empty-state">לא נמצאו יחידות לפי החיפוש הנוכחי.</div>`;
+  return;
+
   document.getElementById("topicList").innerHTML = filtered.map((topic) => `
     <article class="topic-card">
       <div class="topic-meta">

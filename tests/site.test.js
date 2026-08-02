@@ -66,6 +66,7 @@ const distribution = questions.reduce((counts, question) => {
 assert(Math.max(...distribution) - Math.min(...distribution) <= 1, `Answer distribution is uneven: ${distribution.join(",")}`);
 assert(html.includes("enhanced-content.js"), "Enhanced course material script is not loaded");
 assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
+assert(js.includes("const topicSourceLinks") && js.includes("target=\"_blank\"") && js.includes("topicSourceLinks[topic.id]"), "Topic cards must open original source files");
 assert(!html.includes("Lorem ipsum") && !js.includes("TODO starter"), "Starter placeholder content found");
 
 console.log("Practice site checks passed");

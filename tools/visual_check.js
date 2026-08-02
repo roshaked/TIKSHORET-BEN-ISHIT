@@ -50,6 +50,11 @@ async function checkViewport(page, name, width, height) {
   if (sourceState.disabled || sourceState.missingHref) {
     throw new Error(`${name} has disabled or missing topic source links`);
   }
+  await page.locator('.nav-item[data-view="units"]').evaluate((button) => button.click());
+  const topicLinks = await page.locator("#topicList .source-btn").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+  if (topicLinks.length !== 9 || topicLinks.some((href) => !href || !href.startsWith("materials/"))) {
+    throw new Error(`${name} topic cards do not have original source links`);
+  }
   await page.screenshot({ path: path.join(root, "tools", `visual-${name}.png`), fullPage: true });
   const metrics = await page.evaluate(() => ({
     bodyOverflow: document.body.scrollWidth > document.body.clientWidth,
