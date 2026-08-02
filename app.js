@@ -190,6 +190,14 @@ let activeQuestionFilter = "all";
 let searchText = "";
 const selectedAnswers = new Map();
 let revealAll = false;
+let selectedTopicId = topics[0].id;
+let activeMaterialIndex = 0;
+let aiMessages = [
+  {
+    role: "assistant",
+    text: "בחרו פרק או מקור לימוד, ואז אפשר לבקש הסבר, סיכום או שאלת תרגול ממוקדת.",
+  },
+];
 
 const topicMap = Object.fromEntries(topics.map((topic) => [topic.id, topic]));
 
@@ -221,6 +229,7 @@ function renderView() {
   document.querySelectorAll(".nav-item").forEach((button) => {
     button.classList.toggle("active", button.dataset.view === activeView);
   });
+  if (window.lucide) window.lucide.createIcons();
 }
 
 function renderStats() {
@@ -236,6 +245,10 @@ function renderStats() {
   document.getElementById("score").textContent = `${percent}%`;
   document.getElementById("progress").textContent = `${answered}/${questions.length} שאלות נענו`;
   document.getElementById("progressFill").style.width = `${percent}%`;
+  const topProgressLabel = document.getElementById("topProgressLabel");
+  const topProgressFill = document.getElementById("topProgressFill");
+  if (topProgressLabel) topProgressLabel.textContent = `התקדמות ${percent}%`;
+  if (topProgressFill) topProgressFill.style.width = `${percent}%`;
 }
 
 function renderPrompts() {
@@ -255,6 +268,9 @@ function renderTopics() {
       <h3>${topic.title}</h3>
       <ul class="focus-list">${topic.focus.map((item) => `<li>${item}</li>`).join("")}</ul>
       <p class="source-note">${topic.source}</p>
+      <div class="source-actions">
+        <button class="source-btn" type="button" onclick="setActiveTopic('${topic.id}')">פתיחת פרק במרכז הלמידה</button>
+      </div>
     </article>
   `).join("") || `<div class="empty-state">לא נמצאו יחידות לפי החיפוש הנוכחי.</div>`;
 }
@@ -331,13 +347,92 @@ function renderCoverage() {
   `).join("");
 }
 
+function answeredCountForTopic(topicId) {
+  return questions
+    .filter((question) => question.topic === topicId)
+    .filter((question) => selectedAnswers.has(question.id)).length;
+}
+
+function renderChapterNav() {
+  const chapterNav = document.getElementById("chapterNav");
+  if (!chapterNav) return;
+  chapterNav.innerHTML = topics.map((topic, index) => {
+    const topicQuestions = questions.filter((question) => question.topic === topic.id);
+    const done = topicQuestions.length > 0 && answeredCountForTopic(topic.id) === topicQuestions.length;
+    return `
+      <button class="chapter-button ${topic.id === selectedTopicId ? "active" : ""} ${done ? "done" : ""}" type="button" onclick="setActiveTopic('${topic.id}')">
+        <span class="chapter-number">${String(index + 1).padStart(2, "0")}</span>
+        <span class="chapter-title">${topic.title}</span>
+        <span class="completion-dot" aria-hidden="true"></span>
+      </button>
+    `;
+  }).join("");
+}
+
+function renderStudyLab() {
+  const topic = topicMap[selectedTopicId] || topics[0];
+  const material = materials[activeMaterialIndex % materials.length] || materials[0];
+  const setText = (id, value) => {
+    const target = document.getElementById(id);
+    if (target) target.textContent = value;
+  };
+  setText("activeLessonBadge", topic.lesson);
+  setText("activeLessonTitle", topic.title);
+  setText("lessonDescription", topic.focus.join(" · "));
+  setText("materialType", material.status || "מקור לימוד");
+  setText("materialTitle", material.title || "חומר הקורס");
+  setText("materialNote", material.note || topic.source);
+  setText("activeSourceNote", topic.source);
+  const focusList = document.getElementById("activeFocusList");
+  if (focusList) focusList.innerHTML = topic.focus.map((item) => `<li>${item}</li>`).join("");
+  const materialOpenLink = document.getElementById("materialOpenLink");
+  if (materialOpenLink) {
+    materialOpenLink.href = material.href || "index.html";
+    materialOpenLink.toggleAttribute("aria-disabled", !material.href);
+  }
+}
+
+function createAiResponse(action, freeText = "") {
+  const topic = topicMap[selectedTopicId] || topics[0];
+  const question = questions.find((item) => item.topic === topic.id);
+  const term = terms.find((item) => item.tag === topic.id);
+  const material = materials[activeMaterialIndex % materials.length] || materials[0];
+  if (action === "summary") {
+    return `סיכום קצר לפרק "${topic.title}": ${topic.focus.join("; ")}. מקור מומלץ לפתיחה: ${material.title}.`;
+  }
+  if (action === "practice" && question) {
+    return `שאלת תרגול: ${question.prompt}\nתשובה נכונה: ${question.options[question.answer]}\nהסבר: ${question.why}`;
+  }
+  if (action === "ask" || freeText) {
+    return `שאלה טובה. בפרק "${topic.title}" כדאי להתחיל מהמושג ${term ? `"${term.name}"` : "המרכזי"}, ואז לחבר אותו למקרה ממשי: מה נאמר, מה הובן, ומה הצעד הבא שמקטין אי-הבנה.`;
+  }
+  return `הסבר לפרק "${topic.title}": המוקד הוא להפוך ידע תקשורתי להתנהגות ניתנת לביצוע. שימו לב במיוחד ל-${topic.focus[0]}, ואז בדקו איך הוא מופיע בשיחה אמיתית.`;
+}
+
+function addAiMessage(role, text) {
+  aiMessages.push({ role, text });
+  renderAiMessages();
+}
+
+function renderAiMessages() {
+  const target = document.getElementById("aiMessages");
+  if (!target) return;
+  target.innerHTML = aiMessages.map((message) => (
+    `<div class="ai-bubble ${message.role}">${message.text.replace(/\n/g, "<br>")}</div>`
+  )).join("");
+  target.scrollTop = target.scrollHeight;
+}
+
 function renderAll() {
+  renderChapterNav();
+  renderStudyLab();
   renderStats();
   renderPrompts();
   renderTopics();
   renderTerms();
   renderQuestions();
   renderCoverage();
+  renderAiMessages();
   renderView();
 }
 
@@ -353,8 +448,22 @@ function setQuestionFilter(filter) {
 
 function selectAnswer(questionId, answer) {
   selectedAnswers.set(questionId, answer);
+  renderChapterNav();
   renderStats();
   renderQuestions();
+}
+
+function setActiveTopic(topicId) {
+  selectedTopicId = topicId;
+  activeTermFilter = topicId;
+  activeQuestionFilter = topicId;
+  activeView = "units";
+  renderAll();
+}
+
+function moveMaterial(direction) {
+  activeMaterialIndex = (activeMaterialIndex + direction + materials.length) % materials.length;
+  renderStudyLab();
 }
 
 document.querySelectorAll(".nav-item").forEach((button) => {
@@ -383,9 +492,55 @@ document.getElementById("revealAll").addEventListener("click", () => {
   renderQuestions();
 });
 
+document.getElementById("prevMaterial")?.addEventListener("click", () => moveMaterial(-1));
+document.getElementById("nextMaterial")?.addEventListener("click", () => moveMaterial(1));
+
+document.querySelectorAll(".ai-action").forEach((button) => {
+  button.addEventListener("click", () => {
+    const action = button.dataset.action;
+    const label = button.textContent.trim();
+    document.getElementById("aiPanel")?.classList.add("open");
+    addAiMessage("user", label);
+    addAiMessage("assistant", createAiResponse(action));
+  });
+});
+
+document.getElementById("aiForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const input = document.getElementById("aiInput");
+  const text = input.value.trim();
+  if (!text) return;
+  document.getElementById("aiPanel")?.classList.add("open");
+  addAiMessage("user", text);
+  addAiMessage("assistant", createAiResponse("ask", text));
+  input.value = "";
+});
+
+document.getElementById("aiPanelToggle")?.addEventListener("click", () => {
+  document.getElementById("aiPanel")?.classList.toggle("open");
+});
+
+document.getElementById("aiPanelClose")?.addEventListener("click", () => {
+  document.getElementById("aiPanel")?.classList.remove("open");
+});
+
+document.getElementById("themeToggle")?.addEventListener("click", () => {
+  document.body.classList.toggle("light-theme");
+  if (window.lucide) window.lucide.createIcons();
+});
+
+document.getElementById("sidebarCollapse")?.addEventListener("click", () => {
+  document.getElementById("sidebar")?.classList.toggle("collapsed");
+});
+
+document.getElementById("sidebarDrawerToggle")?.addEventListener("click", () => {
+  document.getElementById("sidebar")?.classList.toggle("open");
+});
+
 window.setTermFilter = setTermFilter;
 window.setQuestionFilter = setQuestionFilter;
 window.selectAnswer = selectAnswer;
+window.setActiveTopic = setActiveTopic;
 window.__practiceSiteData = { topics, terms, questions, materials };
 
 renderAll();

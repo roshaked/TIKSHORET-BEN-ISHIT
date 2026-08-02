@@ -4,26 +4,66 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>תקשורת בין אישית | אתר תרגול</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <header class="topbar">
+      <div class="topbar-brand">
+        <button id="sidebarDrawerToggle" class="icon-button mobile-only" type="button" aria-label="פתיחת תפריט פרקים" title="תפריט">
+          <i data-lucide="menu"></i>
+        </button>
+        <span class="brand-mark">תב</span>
+        <div>
+          <p>קורס</p>
+          <strong>תקשורת בין אישית</strong>
+        </div>
+      </div>
+
+      <div class="topbar-progress" aria-live="polite">
+        <span id="topProgressLabel">התקדמות 0%</span>
+        <div class="progress-track slim"><div id="topProgressFill"></div></div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="themeToggle" class="icon-button" type="button" aria-label="מעבר מצב תצוגה" title="מצב כהה/בהיר">
+          <i data-lucide="moon"></i>
+        </button>
+        <button id="aiPanelToggle" class="icon-button" type="button" aria-label="פתיחת פאנל AI" title="AI Assistant">
+          <i data-lucide="sparkles"></i>
+        </button>
+        <span class="user-chip" aria-label="משתמש">
+          <i data-lucide="user-round"></i>
+        </span>
+      </div>
+    </header>
+
     <div class="app-shell" dir="rtl">
-      <aside class="sidebar" aria-label="ניווט באתר">
-        <div class="brand">
-          <span class="brand-mark">תב</span>
-          <div>
-            <p>תקשורת בין אישית</p>
-            <strong>למידה ותרגול</strong>
+      <aside id="sidebar" class="sidebar" aria-label="ניווט באתר">
+        <div class="sidebar-head">
+          <div class="brand compact">
+            <span class="brand-mark small">תב</span>
+            <div>
+              <p>למידה ותרגול</p>
+              <strong>פרקי הקורס</strong>
+            </div>
           </div>
+          <button id="sidebarCollapse" class="icon-button" type="button" aria-label="כיווץ תפריט" title="כיווץ">
+            <i data-lucide="panel-right-close"></i>
+          </button>
         </div>
 
         <nav class="nav-list" aria-label="תצוגות למידה">
-          <button class="nav-item active" data-view="dashboard" type="button">סקירה</button>
-          <button class="nav-item" data-view="units" type="button">יחידות לימוד</button>
-          <button class="nav-item" data-view="termsView" type="button">כרטיסיות</button>
-          <button class="nav-item" data-view="practice" type="button">תרגול</button>
-          <button class="nav-item" data-view="coverage" type="button">כיסוי וחוסרים</button>
+          <button class="nav-item active" data-view="dashboard" type="button"><i data-lucide="layout-dashboard"></i><span>סקירה</span></button>
+          <button class="nav-item" data-view="units" type="button"><i data-lucide="book-open"></i><span>יחידות לימוד</span></button>
+          <button class="nav-item" data-view="termsView" type="button"><i data-lucide="layers-3"></i><span>כרטיסיות</span></button>
+          <button class="nav-item" data-view="practice" type="button"><i data-lucide="circle-help"></i><span>תרגול</span></button>
+          <button class="nav-item" data-view="coverage" type="button"><i data-lucide="folder-open"></i><span>כיסוי וחוסרים</span></button>
         </nav>
+
+        <div id="chapterNav" class="chapter-list" aria-label="פרקי הקורס"></div>
 
         <div class="progress-card" aria-live="polite">
           <span>דיוק בתרגול</span>
@@ -33,17 +73,64 @@
         </div>
       </aside>
 
-      <main>
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">מרכז למידה לקורס</p>
-            <h1>תרגול איכותי בתקשורת בין אישית</h1>
+      <main class="content-panel">
+        <section class="lesson-workspace" aria-labelledby="workspaceTitle">
+          <div class="workspace-header">
+            <div>
+              <p class="eyebrow">מרכז למידה לקורס</p>
+              <h1 id="workspaceTitle">תרגול איכותי בתקשורת בין אישית</h1>
+              <p id="lessonDescription">בחרו פרק, עברו על החומר, ואז תרגלו שאלות יישומיות לפי נושא.</p>
+            </div>
+            <label class="search-box">
+              <span>חיפוש</span>
+              <input id="searchInput" type="search" placeholder="מושג, נושא, דוגמה או מיומנות..." />
+            </label>
           </div>
-          <label class="search-box">
-            <span>חיפוש</span>
-            <input id="searchInput" type="search" placeholder="מושג, נושא, דוגמה או מיומנות..." />
-          </label>
-        </header>
+
+          <div class="study-grid">
+            <article class="slide-card">
+              <div class="slide-toolbar">
+                <div>
+                  <span id="activeLessonBadge" class="badge">יחידה 1</span>
+                  <h2 id="activeLessonTitle">תקשורת אפקטיבית</h2>
+                </div>
+                <div class="slide-nav">
+                  <button id="prevMaterial" class="icon-button" type="button" aria-label="מקור קודם" title="מקור קודם">
+                    <i data-lucide="chevron-right"></i>
+                  </button>
+                  <button id="nextMaterial" class="icon-button" type="button" aria-label="מקור הבא" title="מקור הבא">
+                    <i data-lucide="chevron-left"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="material-frame">
+                <div>
+                  <span id="materialType" class="material-type">מקור לימוד</span>
+                  <h3 id="materialTitle">חומר הקורס</h3>
+                  <p id="materialNote">בחרו מקור מהרשימה או עברו בין הקבצים בעזרת החיצים.</p>
+                </div>
+                <a id="materialOpenLink" class="primary-action" href="index.html">
+                  <i data-lucide="external-link"></i>
+                  פתיחת מקור
+                </a>
+              </div>
+
+              <div class="lesson-actions" aria-label="פעולות למידה">
+                <button class="secondary-action ai-action" type="button" data-action="explain"><i data-lucide="messages-square"></i>הסבר את השקף</button>
+                <button class="secondary-action ai-action" type="button" data-action="ask"><i data-lucide="sparkles"></i>שאל את ה-AI</button>
+                <button class="secondary-action ai-action" type="button" data-action="summary"><i data-lucide="list-checks"></i>סכם את השקף</button>
+                <button class="secondary-action ai-action" type="button" data-action="practice"><i data-lucide="file-question"></i>צור שאלת תרגול</button>
+              </div>
+            </article>
+
+            <aside class="focus-panel" aria-label="מוקדי למידה">
+              <h2>מוקדי הפרק</h2>
+              <ul id="activeFocusList" class="focus-list"></ul>
+              <p id="activeSourceNote" class="source-note"></p>
+            </aside>
+          </div>
+        </section>
 
         <section id="dashboard" class="view active-view" aria-labelledby="dashboardTitle">
           <div class="overview-panel">
@@ -97,22 +184,42 @@
           </div>
           <div id="questionFilters" class="filter-row"></div>
           <div class="practice-actions">
-            <button id="resetPractice" class="secondary-action" type="button">איפוס תרגול</button>
-            <button id="revealAll" class="secondary-action" type="button">הצגת כל ההסברים</button>
+            <button id="resetPractice" class="secondary-action" type="button"><i data-lucide="rotate-ccw"></i>איפוס תרגול</button>
+            <button id="revealAll" class="secondary-action" type="button"><i data-lucide="eye"></i>הצגת כל ההסברים</button>
           </div>
           <div id="questionList" class="question-list"></div>
         </section>
 
         <section id="coverage" class="view" aria-labelledby="coverageTitle">
           <div class="section-title">
-            <h2 id="coverageTitle">כיסוי וחוסרים</h2>
-            <p>כאן מרוכזים מקורות, מגבלות וחומר שכדאי להוסיף לריפו בהמשך.</p>
+            <h2 id="coverageTitle">כיסוי וחומרים</h2>
+            <p>כאן מרוכזים מקורות, מצגות וסיכומים שאפשר לפתוח מתוך האתר.</p>
           </div>
           <div id="coverageList" class="presentation-list"></div>
         </section>
       </main>
+
+      <aside id="aiPanel" class="ai-panel" aria-label="AI Assistant">
+        <div class="ai-header">
+          <div>
+            <p>AI Assistant</p>
+            <strong>עוזר למידה</strong>
+          </div>
+          <button id="aiPanelClose" class="icon-button" type="button" aria-label="סגירת פאנל AI" title="סגירה">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div id="aiMessages" class="ai-messages" aria-live="polite"></div>
+        <form id="aiForm" class="ai-input">
+          <input id="aiInput" type="text" placeholder="כתוב שאלה על החומר..." aria-label="שאלה ל-AI" />
+          <button class="icon-button send-button" type="submit" aria-label="שליחה" title="שליחה">
+            <i data-lucide="send"></i>
+          </button>
+        </form>
+      </aside>
     </div>
 
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="app.js"></script>
     <script src="enhanced-content.js"></script>
   </body>

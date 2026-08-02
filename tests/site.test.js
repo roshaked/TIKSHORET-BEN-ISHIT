@@ -16,14 +16,18 @@ assert(html.includes('dir="rtl"'), "HTML shell must be RTL");
 assert(html.includes('class="app-shell"'), "Missing app shell");
 assert(html.includes('class="sidebar"'), "Missing sidebar");
 assert(html.includes('class="topbar"'), "Missing topbar");
+assert(html.includes('class="ai-panel"'), "Missing AI panel");
+assert(html.includes('class="lesson-workspace"'), "Missing lesson workspace");
+assert(html.includes("lucide"), "Lucide icons must be loaded");
 ["dashboard", "units", "termsView", "practice", "coverage"].forEach((id) => {
   assert(html.includes(`id="${id}"`), `Missing view ${id}`);
   assert(html.includes(`data-view="${id}"`), `Missing nav button for ${id}`);
 });
 
 assert(css.includes("@media (max-width: 720px)"), "Missing mobile CSS");
+assert(css.includes("#0b0d12") && css.includes("#6c7cff"), "Missing Linear-inspired color palette");
 assert(css.includes("overflow-x: hidden"), "Missing horizontal overflow guard");
-assert(css.includes(".sidebar") && css.includes("position: static"), "Missing mobile sidebar behavior");
+assert(css.includes(".sidebar.open") && css.includes("transform: translateX(0)"), "Missing mobile sidebar drawer behavior");
 assert(css.includes(".answers") && css.includes("grid-template-columns: 1fr"), "Missing mobile answers layout");
 
 const sandbox = {
@@ -34,6 +38,7 @@ const sandbox = {
       textContent: "",
       style: {},
       addEventListener: () => {},
+      toggleAttribute: () => {},
     }),
   },
   window: {},
