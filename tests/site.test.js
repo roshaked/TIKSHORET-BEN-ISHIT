@@ -50,7 +50,12 @@ vm.runInContext(enhanced, sandbox);
 const { topics, terms, questions, materials } = sandbox.window.__practiceSiteData;
 assert(topics.length === 9, `Expected 9 topics, got ${topics.length}`);
 assert(terms.length >= 70, `Expected at least 70 terms, got ${terms.length}`);
-assert(questions.length === 52, `Expected 52 questions, got ${questions.length}`);
+assert(questions.length === 112, `Expected 112 questions, got ${questions.length}`);
+const questionsByTopic = questions.reduce((counts, question) => {
+  counts[question.topic] = (counts[question.topic] || 0) + 1;
+  return counts;
+}, {});
+assert(topics.every((topic) => questionsByTopic[topic.id] >= 12), "Every topic needs at least 12 practice questions");
 assert(materials.length === 15, `Expected 15 source files, got ${materials.length}`);
 assert(materials.every((item) => item.href && item.href.startsWith("materials/")), "Every material needs a local source link");
 
