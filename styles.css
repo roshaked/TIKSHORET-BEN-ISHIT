@@ -864,6 +864,21 @@ p {
   padding: 16px;
 }
 
+.ai-body {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.ai-welcome-video {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 4px 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #050609;
+  object-fit: contain;
+}
+
 .ai-bubble {
   max-width: 92%;
   padding: 12px 14px;
