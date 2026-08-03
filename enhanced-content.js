@@ -15,6 +15,7 @@ const materialIndex = {
   effectiveDeck2: "materials/presentations/תקשורת אפקטיבית 2.pdf",
   effectiveDeck3: "materials/presentations/תקשורת אפקטיבית 3.pdf",
   examPrepDeck: "materials/presentations/שיעור הכנה למבחן.pptx",
+  audioTranscripts: "materials/extracted/audio_transcripts__all.txt",
 };
 
 const audioSources = Array.from({ length: 18 }, (_, index) => {
@@ -108,6 +109,35 @@ enhancedTerms.forEach(([name, english, text, tag, sourceKey]) => {
     text,
     tag: normalizedTag,
     reference: topicSources[tag] || topicSources[normalizedTag],
+    sourceHref: materialIndex[sourceKey],
+  });
+});
+
+const audioTerms = [
+  ["מטה־תקשורת", "Metacommunication", "התבוננות בתקשורת עצמה בזמן אמת: מה קורה בתוכן, ביחסים, בערוץ ובתגובה של שני הצדדים.", "effective", "audioTranscripts"],
+  ["שני רבדי המסר", "Content and Relationship Levels", "כל מסר מעביר גם תוכן וגם מסר על מערכת היחסים; קונפליקטים רבים מתעוררים ברובד היחסים ולא רק סביב העובדות.", "effective", "audioTranscripts"],
+  ["התאמת ערוץ", "Channel Fit", "מסר טכני וקצר יכול לעבור בערוץ דל, אבל מסר רגשי, מורכב או נפיץ דורש ערוץ עשיר כמו שיחה או וידאו.", "effective", "audioTranscripts"],
+  ["כשירות תקשורתית", "Communication Competence", "יכולת נלמדת להתאים את הסגנון, הערוץ והניסוח לאדם, למטרה ולהקשר; היא מתפתחת דרך מודעות ותרגול.", "effective", "audioTranscripts"],
+  ["הקשבה אמפתית", "Empathic Listening", "הקשבה ממוקדת ונוכחת שמפחיתה שיפוט, בודקת פירוש, שואלת שאלות פתוחות ונותנת לאדם תחושה שהוא נשמע.", "empathy", "audioTranscripts"],
+  ["חסמי הקשבה", "Listening Blocks", "שיפוטיות, הקשבה סלקטיבית ורעשים פנימיים או חיצוניים עלולים לגרום לנו להקשיב רק לחלק מהמסר.", "empathy", "audioTranscripts"],
+  ["תקשורת תהליכית בצוות", "Process Communication", "התקשורת שמחזיקה את ההגה: סדר יום, זמנים, תיאום, חזרה למטרה והכוונת השיחה.", "teamwork", "audioTranscripts"],
+  ["משוב רגשי־התנהגותי", "Behavioral Feedback", "מבנה משוב שמחבר בין מה אני מרגיש, ההתנהגות שנצפתה, ההשפעה שלה והבקשה המעשית להמשך.", "teamwork", "audioTranscripts"],
+  ["משוב מבוסס חוזקות", "Strengths-Based Feedback", "מתחילים בזיהוי יכולת אמיתית, ואז מנסחים צעד התפתחותי שמגדיל מסוגלות ומוטיבציה במקום להדביק תווית.", "teamwork", "audioTranscripts"],
+  ["מוטיבציה פנימית בצוות", "Intrinsic Team Motivation", "מוטיבציה שנבנית מאוטונומיה, תחושת מסוגלות ומשמעות, ולא רק מתגמול או לחץ חיצוני.", "teamwork", "audioTranscripts"],
+  ["תקשורת אסרטיבית", "Assertive Communication", "הבעת צורך או עמדה באופן ברור ומכבד, בלי להיעלם ובלי למחוק את האדם האחר.", "conflict", "audioTranscripts"],
+  ["תקשורת בין־תרבותית בצוות", "Intercultural Team Communication", "פערים בסגנון, בהבעת הסכמה, בסימני הקשבה וביחס לסמכות דורשים סקרנות, בדיקה וכללים משותפים.", "teamwork", "audioTranscripts"],
+  ["שכנוע אתי", "Ethical Persuasion", "השפעה שמציגה ערך אמיתי ומאפשרת בחירה, בלי ניצול, הטעיה או כפייה; המטרה היא החלטה מושכלת ולא שליטה באדם.", "influence", "audioTranscripts"],
+  ["נוכחות", "Presence", "היכולת להיות נוכחים בחדר דרך יציבה, קול, קשר עין ועמדה ברורה, בלי להתכווץ ובלי להשתלט.", "influence", "audioTranscripts"],
+];
+
+audioTerms.forEach(([name, english, text, tag, sourceKey]) => {
+  const normalizedTag = topicAliases[tag] || tag;
+  terms.push({
+    name,
+    english,
+    text,
+    tag: normalizedTag,
+    reference: "תמלולי קבצי הקול: שיעורי תקשורת בין אישית",
     sourceHref: materialIndex[sourceKey],
   });
 });
@@ -284,6 +314,7 @@ materials.splice(0, materials.length, ...[
   ["תקשורת אפקטיבית 2", "מצגת", "חלק שני ביחידת תקשורת אפקטיבית.", materialIndex.effectiveDeck2],
   ["תקשורת אפקטיבית 3", "מצגת", "חלק שלישי ביחידת תקשורת אפקטיבית.", materialIndex.effectiveDeck3],
   ["שיעור הכנה למבחן", "מצגת הכנה", "מבנה הבחינה, חמשת נושאי הקורס, שאלות דוגמה וטיפים לפתרון שאלות תרחיש.", materialIndex.examPrepDeck],
+  ["תמלולי קבצי הקול", "מקור מידע", "תמלול מלא של 18 הקלטות השיעור, המשמש להרחבת המושגים, הכרטיסיות והתרגול באתר.", materialIndex.audioTranscripts],
   ...audioSources.map(({ title, status, note, href }) => [title, status, note, href]),
 ].map(([title, status, note, href]) => ({ title, status, note, href })));
 

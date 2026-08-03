@@ -1,0 +1,3 @@
+tools/audio_transcription_runtime/
+tools/audio_model_cache/
+materials/transcripts/*.json
