@@ -52,7 +52,7 @@ const { topics, terms, questions, materials } = sandbox.window.__practiceSiteDat
 assert(topics.length === 5, `Expected 5 topics, got ${topics.length}`);
 assert(topics.map((topic) => topic.title).join("|").includes("עבודת צוות") && topics.map((topic) => topic.title).join("|").includes("שכנוע"), "Main topics do not match the requested course structure");
 assert(terms.length >= 80, `Expected at least 80 terms, got ${terms.length}`);
-assert(questions.length === 130, `Expected 130 questions, got ${questions.length}`);
+assert(questions.length === 142, `Expected 142 questions, got ${questions.length}`);
 assert(questions.filter((question) => question.exam).length === 18, "Exam sample question set is incomplete");
 assert(!js.includes("בהקשר המתואר בשאלה ובמסגרת התקשורת הבין אישית"), "Artificial answer padding must not return");
 const questionsByTopic = questions.reduce((counts, question) => {
@@ -60,9 +60,10 @@ const questionsByTopic = questions.reduce((counts, question) => {
   return counts;
 }, {});
 assert(topics.every((topic) => questionsByTopic[topic.id] >= 12), "Every topic needs at least 12 practice questions");
-assert(materials.length === 35, `Expected 35 source files, got ${materials.length}`);
+assert(materials.length === 37, `Expected 37 source files, got ${materials.length}`);
 assert(materials.filter((item) => item.href.endsWith(".m4a")).length === 18, "Audio source collection is incomplete");
 assert(materials.some((item) => item.href.endsWith("audio_transcripts__all.txt")), "Audio transcript source is missing");
+assert(materials.some((item) => item.href.endsWith("בין אישית זום חזרה למבחן.docx")) && materials.some((item) => item.href.endsWith("זום ניבה נושא 5.docx")), "Zoom summary sources are missing");
 assert(materials.every((item) => item.href && item.href.startsWith("materials/")), "Every material needs a local source link");
 
 const distribution = questions.reduce((counts, question) => {
