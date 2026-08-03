@@ -287,7 +287,12 @@ const questions = rawQuestions.map((question, index) => rotateQuestionAnswers([
 
 function matchesSearch(value) {
   if (!searchText) return true;
-  return value.toLowerCase().includes(searchText.toLowerCase());
+  const normalizedValue = value.toLocaleLowerCase("he-IL");
+  return searchText
+    .toLocaleLowerCase("he-IL")
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((token) => normalizedValue.includes(token));
 }
 
 function searchMatches() {
@@ -307,6 +312,24 @@ function renderSearchStatus() {
   const { termsFound, questionsFound, topicsFound } = searchMatches();
   const total = termsFound.length + questionsFound.length + topicsFound.length;
   status.textContent = total ? `נמצאו ${total} תוצאות` : "לא נמצאו תוצאות";
+}
+
+function renderSearchResults() {
+  const target = document.getElementById("searchResults");
+  if (!target) return;
+  if (!searchText) {
+    target.innerHTML = "";
+    return;
+  }
+  const { termsFound, questionsFound, topicsFound } = searchMatches();
+  const results = [
+    ...termsFound.slice(0, 4).map((term) => ({ view: "termsView", label: term.name, meta: "כרטיסייה" })),
+    ...topicsFound.slice(0, 3).map((topic) => ({ view: "units", label: topic.title, meta: "יחידת לימוד" })),
+    ...questionsFound.slice(0, 3).map((question) => ({ view: "practice", label: question.prompt, meta: "שאלת תרגול" })),
+  ];
+  target.innerHTML = results.length
+    ? results.map((result) => `<button class="search-result" type="button" onclick="openSearchResult('${result.view}')"><span>${result.label}</span><small>${result.meta}</small></button>`).join("")
+    : `<div class="search-empty">לא נמצאו תוצאות מתאימות</div>`;
 }
 
 function renderView({ scrollToView = false } = {}) {
@@ -575,6 +598,8 @@ function renderAll() {
   renderCoverage();
   renderAiMessages();
   renderView();
+  renderSearchStatus();
+  renderSearchResults();
 }
 
 function setTermFilter(filter) {
@@ -585,6 +610,12 @@ function setTermFilter(filter) {
 function setQuestionFilter(filter) {
   activeQuestionFilter = filter;
   renderQuestions();
+}
+
+function openSearchResult(view) {
+  activeView = view;
+  renderAll();
+  document.getElementById(view)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function openExamPractice() {
