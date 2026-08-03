@@ -71,6 +71,7 @@ const distribution = questions.reduce((counts, question) => {
 }, [0, 0, 0, 0]);
 assert(Math.max(...distribution) - Math.min(...distribution) <= 1, `Answer distribution is uneven: ${distribution.join(",")}`);
 assert(html.includes("enhanced-content.js"), "Enhanced course material script is not loaded");
+assert(html.includes('src="materials/videos/סרטון הסבר.mp4"') && html.includes("autoplay muted") && html.includes("playsinline"), "Intro video must autoplay safely on mobile");
 assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
 assert(enhanced.includes("שיעור הכנה למבחן.pptx") && enhanced.includes("examQuestionSeeds"), "Exam preparation material is not wired into the site");
 assert(js.includes("שאלות דוגמה למבחן") && js.includes("openExamPractice"), "Exam practice entry point is missing");
