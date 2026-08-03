@@ -33,7 +33,7 @@ const server = http.createServer((request, response) => {
 
 async function checkViewport(page, name, width, height) {
   await page.setViewportSize({ width, height });
-  await page.goto("http://127.0.0.1:4173", { waitUntil: "networkidle" });
+  await page.goto("http://127.0.0.1:4173", { waitUntil: "domcontentloaded" });
   for (const view of ["dashboard", "units", "termsView", "practice", "coverage"]) {
     await page.locator(`.nav-item[data-view="${view}"]`).evaluate((button) => button.click());
     const active = await page.locator(`#${view}`).evaluate((node) => node.classList.contains("active-view"));
