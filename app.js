@@ -632,6 +632,13 @@ function selectAnswer(questionId, answer) {
   renderQuestions();
 }
 
+function resetProgress() {
+  selectedAnswers.clear();
+  revealAll = false;
+  activeQuestionFilter = "all";
+  renderAll();
+}
+
 function setActiveTopic(topicId) {
   selectedTopicId = topicId;
   activeTermFilter = topicId;
@@ -744,6 +751,8 @@ document.getElementById("resetPractice").addEventListener("click", () => {
   renderStats();
   renderQuestions();
 });
+
+document.getElementById("resetProgress")?.addEventListener("click", resetProgress);
 
 document.getElementById("revealAll").addEventListener("click", () => {
   revealAll = true;

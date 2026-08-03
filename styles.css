@@ -327,6 +327,12 @@ body.light-theme .topbar {
   background: var(--panel);
 }
 
+.reset-progress {
+  width: calc(100% - 28px);
+  margin: 0 14px 12px;
+  justify-content: center;
+}
+
 .progress-card span,
 .progress-card small {
   color: var(--muted);

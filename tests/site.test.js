@@ -75,6 +75,7 @@ assert(html.includes('class="course-video"') && html.includes('id="courseIntroVi
 assert(html.includes('class="ai-welcome-video"') && html.includes('id="welcomeVideo"') && html.includes('src="materials/videos/סרטון הסבר.mp4"') && html.includes("autoplay muted") && html.includes("playsinline"), "Side explainer video must autoplay safely on mobile");
 assert(!html.includes("loop"), "Welcome video must play once per page entry");
 assert(html.includes('id="searchStatus"') && html.includes('id="searchResults"') && js.includes("function searchMatches") && js.includes("function openSearchResult"), "Global search must show matching content");
+assert(html.includes('id="resetProgress"') && js.includes("function resetProgress"), "Progress reset control is missing");
 assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
 assert(enhanced.includes("שיעור הכנה למבחן.pptx") && enhanced.includes("examQuestionSeeds"), "Exam preparation material is not wired into the site");
 assert(js.includes("שאלות דוגמה למבחן") && js.includes("openExamPractice"), "Exam practice entry point is missing");
