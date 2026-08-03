@@ -290,6 +290,25 @@ function matchesSearch(value) {
   return value.toLowerCase().includes(searchText.toLowerCase());
 }
 
+function searchMatches() {
+  const termsFound = terms.filter((term) => matchesSearch(`${term.name} ${term.english} ${term.text} ${topicMap[term.tag].title}`));
+  const questionsFound = questions.filter((question) => matchesSearch(`${question.prompt} ${question.options.join(" ")} ${topicMap[question.topic].title}`));
+  const topicsFound = topics.filter((topic) => matchesSearch(`${topic.title} ${topic.lesson} ${topic.focus.join(" ")}`));
+  return { termsFound, questionsFound, topicsFound };
+}
+
+function renderSearchStatus() {
+  const status = document.getElementById("searchStatus");
+  if (!status) return;
+  if (!searchText) {
+    status.textContent = "";
+    return;
+  }
+  const { termsFound, questionsFound, topicsFound } = searchMatches();
+  const total = termsFound.length + questionsFound.length + topicsFound.length;
+  status.textContent = total ? `נמצאו ${total} תוצאות` : "לא נמצאו תוצאות";
+}
+
 function renderView({ scrollToView = false } = {}) {
   document.querySelectorAll(".view").forEach((view) => {
     view.classList.toggle("active-view", view.id === activeView);
@@ -681,9 +700,11 @@ document.querySelectorAll(".nav-item").forEach((button) => {
 
 document.getElementById("searchInput").addEventListener("input", (event) => {
   searchText = event.target.value.trim();
-  renderTopics();
-  renderTerms();
-  renderQuestions();
+  const { termsFound, questionsFound } = searchMatches();
+  if (searchText && termsFound.length) activeView = "termsView";
+  else if (searchText && questionsFound.length) activeView = "practice";
+  renderAll();
+  renderSearchStatus();
 });
 
 document.getElementById("resetPractice").addEventListener("click", () => {

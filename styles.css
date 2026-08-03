@@ -495,6 +495,12 @@ p {
   font-weight: 700;
 }
 
+.search-status {
+  min-height: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .search-box input,
 .ai-input input {
   width: 100%;

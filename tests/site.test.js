@@ -74,6 +74,7 @@ assert(html.includes("enhanced-content.js"), "Enhanced course material script is
 assert(html.includes('class="course-video"') && html.includes('id="welcomeVideo"') && html.includes('src="materials/כשירות_תקשורתית__ארגז_הכלים.mp4"') && html.includes("autoplay muted") && html.includes("playsinline"), "Welcome video must autoplay safely on mobile");
 assert(!html.includes('class="ai-welcome-video"'), "Welcome video should remain in the main content area");
 assert(!html.includes("loop"), "Welcome video must play once per page entry");
+assert(html.includes('id="searchStatus"') && js.includes("function searchMatches") && js.includes("activeView = \"termsView\""), "Global search must show matching content");
 assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
 assert(enhanced.includes("שיעור הכנה למבחן.pptx") && enhanced.includes("examQuestionSeeds"), "Exam preparation material is not wired into the site");
 assert(js.includes("שאלות דוגמה למבחן") && js.includes("openExamPractice"), "Exam practice entry point is missing");

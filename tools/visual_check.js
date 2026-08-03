@@ -44,6 +44,14 @@ async function checkViewport(page, name, width, height) {
     throw new Error(`${name} chapter shortcut did not open units`);
   }
   await page.locator('.nav-item[data-view="termsView"]').evaluate((button) => button.click());
+  await page.locator("#searchInput").fill("שיקוף");
+  if (!(await page.locator("#termsView").evaluate((node) => node.classList.contains("active-view")))) {
+    throw new Error(`${name} global search did not open matching terms`);
+  }
+  if (!(await page.locator("#termStack .term-card").count())) {
+    throw new Error(`${name} global search returned no matching term card`);
+  }
+  await page.locator("#searchInput").fill("");
   const sourceState = await page.evaluate(() => ({
     disabled: document.querySelectorAll('#termStack a[aria-disabled="true"]').length,
     missingHref: [...document.querySelectorAll("#termStack .source-btn")].some((link) => !link.getAttribute("href")),
