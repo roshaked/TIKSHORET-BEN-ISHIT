@@ -71,8 +71,8 @@ const distribution = questions.reduce((counts, question) => {
 }, [0, 0, 0, 0]);
 assert(Math.max(...distribution) - Math.min(...distribution) <= 1, `Answer distribution is uneven: ${distribution.join(",")}`);
 assert(html.includes("enhanced-content.js"), "Enhanced course material script is not loaded");
-assert(html.includes('class="ai-welcome-video"') && html.includes('id="welcomeVideo"') && html.includes('src="materials/כשירות_תקשורתית__ארגז_הכלים.mp4"') && html.includes("autoplay muted") && html.includes("playsinline"), "Welcome video must autoplay safely on mobile");
-assert(!html.includes('class="course-video"'), "Welcome video should remain in the AI panel");
+assert(html.includes('class="course-video"') && html.includes('id="courseIntroVideo"') && html.includes('src="materials/כשירות_תקשורתית__ארגז_הכלים.mp4"'), "Main course video is missing");
+assert(html.includes('class="ai-welcome-video"') && html.includes('id="welcomeVideo"') && html.includes('src="materials/videos/סרטון הסבר.mp4"') && html.includes("autoplay muted") && html.includes("playsinline"), "Side explainer video must autoplay safely on mobile");
 assert(!html.includes("loop"), "Welcome video must play once per page entry");
 assert(html.includes('id="searchStatus"') && html.includes('id="searchResults"') && js.includes("function searchMatches") && js.includes("function openSearchResult"), "Global search must show matching content");
 assert(enhanced.includes("מודל טאקמן") && enhanced.includes("עקרונות צ'יאלדיני"), "Enhanced course concepts missing");
