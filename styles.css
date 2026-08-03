@@ -797,7 +797,7 @@ p {
 .answer-btn {
   padding: 12px;
   text-align: right;
-  min-height: 78px;
+  min-height: 58px;
   display: flex;
   align-items: center;
   line-height: 1.55;

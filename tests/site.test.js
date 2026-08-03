@@ -54,10 +54,7 @@ assert(topics.map((topic) => topic.title).join("|").includes("עבודת צוו�
 assert(terms.length >= 80, `Expected at least 80 terms, got ${terms.length}`);
 assert(questions.length === 130, `Expected 130 questions, got ${questions.length}`);
 assert(questions.filter((question) => question.exam).length === 18, "Exam sample question set is incomplete");
-assert(questions.every((question) => {
-  const lengths = question.options.map((option) => option.trim().split(/\s+/).length);
-  return new Set(lengths).size === 1;
-}), "Question choices must have equal word counts");
+assert(!js.includes("בהקשר המתואר בשאלה ובמסגרת התקשורת הבין אישית"), "Artificial answer padding must not return");
 const questionsByTopic = questions.reduce((counts, question) => {
   counts[question.topic] = (counts[question.topic] || 0) + 1;
   return counts;

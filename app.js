@@ -276,20 +276,6 @@ function rotateQuestionAnswers(question, index) {
   };
 }
 
-function equalizeAnswerChoices(options) {
-  const fillerWords = "בהקשר המתואר בשאלה ובמסגרת התקשורת הבין אישית".split(" ");
-  const targetWords = Math.max(...options.map((option) => option.trim().split(/\s+/).length)) + 2;
-  return options.map((option) => {
-    const words = option.trim().split(/\s+/);
-    let fillerIndex = 0;
-    while (words.length < targetWords) {
-      words.push(fillerWords[fillerIndex % fillerWords.length]);
-      fillerIndex += 1;
-    }
-    return words.join(" ");
-  });
-}
-
 const questions = rawQuestions.map((question, index) => rotateQuestionAnswers([
   topicAliases[question[0]] || question[0],
   question[1],

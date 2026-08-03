@@ -297,10 +297,6 @@ examQuestionSeeds.forEach((seed, index) => {
   });
 });
 
-questions.forEach((question) => {
-  question.options = equalizeAnswerChoices(question.options);
-});
-
 materials.splice(0, materials.length, ...[
   ["סיכום שכנוע, התרשמות, ניהול רושם ושפת גוף", "סיכום", "שני נתיבי שכנוע, עקרונות צ'יאלדיני, הטיות התרשמות, גוףמן ושפת גוף.", materialIndex.persuasionSummary],
   ["סיכומים מהמודל תקשורת בין אישית", "סיכום מרכזי", "מודלים של תקשורת, אמפתיה, קונפליקטים, שיחות קשות ועבודת צוות.", materialIndex.model],
