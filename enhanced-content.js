@@ -18,6 +18,13 @@ const materialIndex = {
   audioTranscripts: "materials/extracted/audio_transcripts__all.txt",
   zoomReview: "materials/summaries/בין אישית זום חזרה למבחן.docx",
   zoomTopic5: "materials/summaries/זום ניבה נושא 5.docx",
+  teamworkDeck1: "materials/presentations/נוספות/עבודת צוות 1.pdf",
+  teamworkDeck2: "materials/presentations/נוספות/עבודת צוות 2.pdf",
+  teamworkDeck3: "materials/presentations/נוספות/עבודת צוות 3.pdf",
+  conflictDeck1: "materials/presentations/נוספות/קונפליקטים 1.pdf",
+  conflictDeck2: "materials/presentations/נוספות/קונפליקטים 2.pdf",
+  conflictDeck3: "materials/presentations/נוספות/קונפליקטים 3.pdf",
+  extraDeckText: "materials/extracted/additional_team_conflict_materials.txt",
 };
 
 const audioSources = Array.from({ length: 18 }, (_, index) => {
@@ -170,6 +177,29 @@ zoomTerms.forEach(([name, english, text, tag, sourceKey]) => {
     text,
     tag: normalizedTag,
     reference: "סיכומי זום: חזרה למבחן ונושא 5",
+    sourceHref: materialIndex[sourceKey],
+  });
+});
+
+const extraDeckTerms = [
+  ["קבוצה לעומת צוות", "Group vs Team", "קבוצה כוללת אנשים באינטראקציה; צוות מוסיף מטרה משותפת, תלות הדדית, תפקידים משלימים ואחריות קולקטיבית.", "teamwork", "teamworkDeck1"],
+  ["סינרגיה בצוות", "Team Synergy", "מצב שבו שילוב התרומות יוצר תוצאה גדולה מסכום התרומות האישיות, בזכות השלמה, תיאום ואמון.", "teamwork", "teamworkDeck2"],
+  ["התנגדות בצוות", "Team Resistance", "התנגדות עשויה לסמן חשש, חוסר בהירות או פער בין השינוי לבין הצרכים; כדאי להבין אותה לפני שמנסים לעקוף אותה.", "teamwork", "teamworkDeck1"],
+  ["חשיבת יחד", "Groupthink", "הרצון להסכמה ולהרמוניה משתיק ספקות ומחליש בדיקה ביקורתית של החלטת הצוות.", "teamwork", "teamworkDeck2"],
+  ["אנטומיית הקונפליקט", "Conflict Anatomy", "קונפליקט כולל שכבות גלויות וסמויות: אירוע או עמדה, פרשנות, רגש, צורך וערך; פתרון טוב בודק מעבר לעמדה.", "conflict", "conflictDeck1"],
+  ["קרחון הקונפליקט", "Conflict Iceberg", "העמדות וההתנהגות נמצאות מעל פני השטח, ומתחתיהן מסתתרים רגשות, צרכים, ערכים וזהות שמניעים את המחלוקת.", "conflict", "conflictDeck3"],
+  ["תגובה אוטומטית בקונפליקט", "Automatic Conflict Response", "גירוי יכול להפעיל תקיפה, בריחה, קיפאון או ריצוי; יצירת הפסקה מאפשרת לעבור מתגובה לבחירה.", "conflict", "conflictDeck2"],
+  ["קונפליקט כמנוע צמיחה", "Conflict as Growth", "מחלוקת יכולה להציף פערים ולשפר החלטות, כאשר מנהלים אותה באמצעות הקשבה, בירור צרכים וכללים לשיחה.", "conflict", "conflictDeck1"],
+];
+
+extraDeckTerms.forEach(([name, english, text, tag, sourceKey]) => {
+  const normalizedTag = topicAliases[tag] || tag;
+  terms.push({
+    name,
+    english,
+    text,
+    tag: normalizedTag,
+    reference: "מצגות נוספות: עבודת צוות וקונפליקטים",
     sourceHref: materialIndex[sourceKey],
   });
 });
@@ -358,6 +388,31 @@ zoomQuestionSeeds.forEach((seed, index) => {
   });
 });
 
+const extraDeckQuestionSeeds = [
+  ["teamwork", "מה הופך קבוצה לצוות?", ["מטרה משותפת, תלות הדדית ותפקידים משלימים", "אנשים שנמצאים באותו חדר", "מנהל אחד שמחלק הוראות", "הסכמה מלאה ללא דיון"], 0, "מצגות עבודת הצוות מבחינות בין קבוצה לבין צוות שמחזיק משימה ואחריות משותפת."],
+  ["teamwork", "מהי סינרגיה בצוות?", ["תוצאה משותפת הגדולה מסכום התרומות האישיות", "חלוקת משימה לחלקים ללא תיאום", "מצב שבו כולם עושים את אותו הדבר", "החלטה שמתקבלת בלי מחלוקת"], 0, "המצגות מציגות סינרגיה כמצב שבו החיבור בין התרומות מייצר ערך נוסף."],
+  ["teamwork", "מהי תגובה מקצועית להתנגדות לשינוי בצוות?", ["לברר את מקור החשש ולחבר את השינוי לצורך ברור", "להשתיק את המתנגדים", "להכריז שההחלטה סופית בלי הסבר", "להתעלם עד שההתנגדות תיעלם"], 0, "התנגדות מספקת מידע על חוסר בהירות או צורך שלא קיבל מענה."],
+  ["teamwork", "מהו הסיכון המרכזי בחשיבת יחד?", ["הרמוניה מדומה שמחליפה בדיקה ביקורתית", "עודף רעיונות בסיעור מוחות", "חלוקת תפקידים ברורה", "מתן זמן לניתוח הנתונים"], 0, "חשיבת יחד גורמת לאנשים להשתיק ספקות כדי לשמור על הסכמה."],
+  ["conflict", "מה עשוי להימצא מתחת לעמדה גלויה בקונפליקט?", ["רגש, צורך, ערך או משמעות אישית", "רק עובדה נוספת", "הפתרון שכבר נבחר", "הסכמה מלאה בין הצדדים"], 0, "מודל הקרחון מזכיר שהעמדה היא רק השכבה הנראית של המחלוקת."],
+  ["conflict", "אדם מגיב לצעקה בהסתגרות ובחוסר יכולת לדבר. איזו תגובה אוטומטית זו?", ["קיפאון", "תחרות", "שיתוף פעולה", "פשרה"], 0, "קיפאון הוא תגובת הישרדות שבה קשה לפעול או לנסח מילים בזמן האיום."],
+  ["conflict", "כיצד קונפליקט יכול לתרום לצוות?", ["הוא מציף פערים ומאפשר לשפר החלטות וכללי עבודה", "הוא תמיד מוכיח שהצוות נכשל", "הוא מחליף את הצורך בהקשבה", "הוא מחייב לבחור צד מיד"], 0, "קונפליקט מנוהל יכול להפוך מידע על פערים ללמידה ולשיפור."],
+  ["conflict", "מהו צעד ראשון לפני ניסיון לפתור קונפליקט מורכב?", ["לברר מה נמצא מתחת לעמדה ומה חשוב לכל צד", "להוכיח מי התחיל", "להציע פשרה לפני הקשבה", "להרחיק את אחד הצדדים מהשיחה"], 0, "הבנת השכבות הסמויות פותחת אפשרויות שלא רואים כשנשארים רק בעמדות."],
+];
+
+extraDeckQuestionSeeds.forEach((seed, index) => {
+  const [topic, prompt, options, answer, why] = seed;
+  const normalizedTopic = topicAliases[topic] || topic;
+  const offset = index % options.length;
+  questions.push({
+    id: `p${index + 1}`,
+    topic: normalizedTopic,
+    prompt,
+    options: options.map((_, optionIndex) => options[(optionIndex - offset + options.length) % options.length]),
+    answer: (answer + offset) % options.length,
+    why,
+  });
+});
+
 materials.splice(0, materials.length, ...[
   ["סיכום שכנוע, התרשמות, ניהול רושם ושפת גוף", "סיכום", "שני נתיבי שכנוע, עקרונות צ'יאלדיני, הטיות התרשמות, גוףמן ושפת גוף.", materialIndex.persuasionSummary],
   ["סיכומים מהמודל תקשורת בין אישית", "סיכום מרכזי", "מודלים של תקשורת, אמפתיה, קונפליקטים, שיחות קשות ועבודת צוות.", materialIndex.model],
@@ -378,6 +433,12 @@ materials.splice(0, materials.length, ...[
   ["תמלולי קבצי הקול", "מקור מידע", "תמלול מלא של 18 הקלטות השיעור, המשמש להרחבת המושגים, הכרטיסיות והתרגול באתר.", materialIndex.audioTranscripts],
   ["בין אישית זום חזרה למבחן", "סיכום זום", "חזרה על מודלים, רעשים, אמפתיה, קונפליקטים, עבודת צוות, שכנוע ושפת גוף.", materialIndex.zoomReview],
   ["זום ניבה נושא 5", "סיכום זום", "העמקה בשכנוע, עקרונות צ'יאלדיני, ניהול רושם ושפת גוף.", materialIndex.zoomTopic5],
+  ["עבודת צוות 1", "מצגת נוספת", "יסודות עבודת צוות, תפקידים, סינרגיה ושלבי התפתחות.", materialIndex.teamworkDeck1],
+  ["עבודת צוות 2", "מצגת נוספת", "סינרגיה, חשיבת יחד, קבלת החלטות ומנגנוני הגנה בצוות.", materialIndex.teamworkDeck2],
+  ["עבודת צוות 3", "מצגת נוספת", "שפה חסרת כוח, תקשורת בין־תרבותית, רפורט וריפורט ועבודת צוות מגוונת.", materialIndex.teamworkDeck3],
+  ["קונפליקטים 1", "מצגת נוספת", "אנטומיית הקונפליקט, אמפתיה, משאבים וגורמי עומק במחלוקת.", materialIndex.conflictDeck1],
+  ["קונפליקטים 2", "מצגת נוספת", "סגנונות ניהול קונפליקט, תגובות אוטומטיות, צרכים ותקשורת מקרבת.", materialIndex.conflictDeck2],
+  ["קונפליקטים 3", "מצגת נוספת", "שכבות הקונפליקט, שיחות קשות, ערכים והדרך להבנת המחלוקת.", materialIndex.conflictDeck3],
   ...audioSources.map(({ title, status, note, href }) => [title, status, note, href]),
 ].map(([title, status, note, href]) => ({ title, status, note, href })));
 
